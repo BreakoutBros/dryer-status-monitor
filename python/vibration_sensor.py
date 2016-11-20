@@ -2,6 +2,7 @@ import RPi.GPIO as GPIO
 import signal
 import sys
 import time
+import os
 from datetime import datetime
 
 
@@ -36,6 +37,7 @@ def cleanup():
 def main_loop():
     vib_pin = 21
     init_gpio_input(vib_pin)
+    status_file = os.path.join(os.path.dirname(__file__), 'dryer_status.txt')
     while True:
         low, high = poll_gpio(10, 100, vib_pin)
         status = 'Dryer Status: '
@@ -43,7 +45,7 @@ def main_loop():
             status += 'On\n'
         else:
             status += 'Off\n'
-        with open('dryer_status.txt', 'w') as f:
+        with open(status_file, 'w') as f:
             status += 'Updated: ' + str(datetime.now())
             f.write(status)
 
