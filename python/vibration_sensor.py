@@ -16,7 +16,6 @@ class PushoverSender:
         conn.request("POST", "/1/messages.json",
                      urllib.urlencode(post_data), {"Content-type": "application/x-www-form-urlencoded"})
         # print(conn.getresponse().read())
-        print('Notifying: ' + text)
 
 
 class DryerMonitor:
@@ -71,7 +70,6 @@ class DryerMonitor:
             else:
                 count_low += 1
             time.sleep(1.0 / DryerMonitor.poll_hz)
-        print('high:' + str(count_high) + ' low:' + str(count_low))
         return count_high > 5
 
 
