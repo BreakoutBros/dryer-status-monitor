@@ -1,8 +1,6 @@
 import RPi.GPIO as GPIO
 import time
-import time
 import os
-from datetime import datetime
 import httplib
 import urllib
 
@@ -22,8 +20,8 @@ class PushoverSender:
 
 
 class DryerMonitor:
-    poll_duration_secs = 10
-    poll_hz = 100
+    poll_duration_secs = 30
+    poll_hz = 60
 
     def __init__(self, gpio_bcm, pushover_sender):
         self.gpio = gpio_bcm
@@ -66,11 +64,15 @@ class DryerMonitor:
         start_time = time.time()
         end_time = start_time + DryerMonitor.poll_duration_secs
         count_high = 0
+        count_low = 0
         while time.time() < end_time:
             if GPIO.input(self.gpio) != 0:
                 count_high += 1
+            else:
+                count_low += 1
             time.sleep(1.0 / DryerMonitor.poll_hz)
-        return count_high > 0
+        print('high:' + str(count_high) + ' low:' + str(count_low))
+        return count_high > 5
 
 
 def get_key(filename):
